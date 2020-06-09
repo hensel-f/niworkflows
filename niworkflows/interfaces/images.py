@@ -350,6 +350,10 @@ class Conform(SimpleInterface):
 
         # Set a 0.05mm threshold to performing rescaling
         atol = {"meter": 1e-5, "mm": 0.01, "micron": 10}[xyz_unit]
+        ####added by Felix:
+        atol_fine = {'meter': 1e-6, 'mm': 0.001, 'micron': 1}[xyz_unit]
+        fix_zooms = not np.allclose(zooms, target_zooms, atol=atol_fine)
+        #########
 
         # Rescale => change zooms
         # Resize => update image dimensions
@@ -375,6 +379,13 @@ class Conform(SimpleInterface):
             data = nli.resample_img(reoriented, target_affine, target_shape).dataobj
             conform_xfm = np.linalg.inv(reoriented.affine).dot(target_affine)
             reoriented = reoriented.__class__(data, target_affine, reoriented.header)
+
+        ####added by Felix:
+        elif fix_zooms:
+            r_zoom = target_zooms#[round(x, 2) for x in target_zooms]
+            reoriented.header.set_zooms(r_zoom)
+            print('applied rounded zoom: ',r_zoom)
+        ###########
 
         # Image may be reoriented, rescaled, and/or resized
         if reoriented is not orig_img:
