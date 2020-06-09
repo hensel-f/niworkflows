@@ -352,7 +352,7 @@ class Conform(SimpleInterface):
         atol = {"meter": 1e-5, "mm": 0.01, "micron": 10}[xyz_unit]
         ####added by Felix:
         atol_fine = {'meter': 1e-6, 'mm': 0.001, 'micron': 1}[xyz_unit]
-        fix_zooms = not np.allclose(zooms, target_zooms, atol=atol_fine)
+        fix_zooms = True #changed by Felix: not np.allclose(zooms, target_zooms, atol=atol_fine)
         #########
 
         # Rescale => change zooms
