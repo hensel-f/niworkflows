@@ -380,6 +380,14 @@ class Conform(SimpleInterface):
             conform_xfm = np.linalg.inv(reoriented.affine).dot(target_affine)
             reoriented = reoriented.__class__(data, target_affine, reoriented.header)
 
+            ####added by Felix:
+            fix_zooms = not np.allclose(zooms, target_zooms, atol=atol_fine)
+            if fix_zooms:
+                r_zoom = target_zooms#[round(x, 2) for x in target_zooms]
+                reoriented.header.set_zooms(r_zoom)
+                print('applied rounded zoom: ',r_zoom)
+            ###########
+
         ####added by Felix:
         if fix_zooms:
             r_zoom = target_zooms#[round(x, 2) for x in target_zooms]
